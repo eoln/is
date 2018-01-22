@@ -1,0 +1,26 @@
+{
+  "name": "@eoln/is",
+  "version": "1.0.0",
+  "description": "eoln's type recognition utility",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eoln/is.git"
+  },
+  "keywords": [
+    "rtti","eoln","type"
+  ],
+  "author": "@eoln",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/eoln/is/issues"
+  },
+  "homepage": "https://github.com/eoln/is#readme",
+  "dependencies": {
+    "coffeescript": "^2.1.1"
+  }
+
+}
