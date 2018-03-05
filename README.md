@@ -49,17 +49,18 @@ $is.Symbol Symbol()
 #=> true
 
 # global custom classes
-class NewClass {}
-$is._name NewClass
+class NewClass
+$is._name new NewClass
 #=> NewClass
 
-$is._register NewClass
-$is.NewClass new NewClass()
+# register type by example value
+$is._register new NewClass
+$is.NewClass new NewClass
 #=> true
 
-# custom scope `eoln` for custom class `NewestClass`
+# custom scope `eoln` for custom value of class  `NewestClass`
 class NewestClass
-$is._register NewestClass, 'eoln'
+$is._register new NewestClass, 'eoln'
 $is.eoln.NewestClass new NewestClass
 #=> true
 ```
