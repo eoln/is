@@ -58,7 +58,7 @@ $is.NewClass new NewClass()
 #=> true
 
 # custom scope `eoln` for custom class `NewestClass`
-class NewestClass {}
+class NewestClass
 $is._register NewestClass, 'eoln'
 $is.eoln.NewestClass new NewestClass
 #=> true
