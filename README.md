@@ -1,14 +1,14 @@
 # @eoln/is
 
-## TL;DR
-run time type/class discovery by value inspection 
-and custom class type information scoped registry
-
-
 ## install mantra
 ```bash
 npm install @eoln/is --save
 ```
+
+## TL;DR
+run time type/class discovery by value inspection 
+and custom class type information scoped registry
+
 
 ## coffeescript usage examples:
 
