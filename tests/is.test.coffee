@@ -1,20 +1,20 @@
 $is = require '../src/is'
 
-
-
 describe 'is', () ->
     js = [
-        { v:[],           t:'Array' }
-        { v:true,         t:'Boolean' }
-        { v:new Date(),   t:'Date' }
-        { v: (() -> {}),  t:'Function' }
-        { v:null,         t: 'Null' }
-        { v:1.0,          t: 'Number' }
-        { v:{},           t: 'Object' }
-        { v:/./,          t: 'RegExp' }
-        { v:'',           t: 'String' }
-        { v:Symbol(),     t: 'Symbol'    }
-        { v:undefined,    t: 'Undefined' }
+        { v: [],                 t:'Array' }
+        { v: true,               t:'Boolean' }
+        { v: new Date(),         t:'Date' }
+        # Date is a function
+        { v: Date,               t:'Function' }
+        { v: null,               t: 'Null' }
+        { v: 1.0,                t: 'Number' }
+        { v: Promise.resolve(),  t: 'Promise'}
+        { v: {},                 t: 'Object' }
+        { v: /./,                t: 'RegExp' }
+        { v: '',                 t: 'String' }
+        { v: Symbol(),           t: 'Symbol'    }
+        { v: undefined,          t: 'Undefined' }
     ];
 
     describe 'layout', () ->
@@ -23,13 +23,14 @@ describe 'is', () ->
             '_name'
             '_register'
 
-            # registered types/classes
+            # registered native types
             'Array'
             'Boolean'
             'Date'
             'Function'
             'Null'
             'Number'
+            'Promise'
             'Object'
             'RegExp'
             'String'
@@ -41,6 +42,9 @@ describe 'is', () ->
         props.forEach (p) ->
             it "property #{p}", () ->
                 expect($is[p]).toBeDefined()
+                expect(typeof $is[p]).toBe('function')
+
+                
 
 
 

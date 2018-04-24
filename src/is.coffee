@@ -43,20 +43,21 @@ exports._register = ( x, scope ) ->
 
 #
 # js (native) values
-
+#
 jsValues = [
-    []              # is.Array
-    true            # is.Boolean
-    new Date()      # is.Date
-    () -> ''        # is.Function
-    null            # is.Null
-    1.0             # is.Number
-    {}              # is.Object
-    /./             # is.RegExp
-    ''              # is.String
-    Symbol()        # is.Symbol
-    undefined       # is.Undefined
-];
+    []                  # is.Array
+    true                # is.Boolean
+    new Date()          # is.Date
+    Date                # is.Function
+    null                # is.Null
+    1.0                 # is.Number
+    Promise.resolve()   # is.Promise
+    {}                  # is.Object
+    /./                 # is.RegExp
+    ''                  # is.String
+    Symbol()            # is.Symbol
+    undefined           # is.Undefined
+]
 
 
 #
