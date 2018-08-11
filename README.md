@@ -5,62 +5,135 @@
 npm install @eoln/is --save
 ```
 
-## TL;DR
-run time type/class discovery by value inspection 
-and custom class type information scoped registry
+# TL;DR
+run time type/class discovery by value inspection  
+and custom class checkers registry (scoped)
 
 
-## coffeescript usage examples:
+# usage examples:
 
 ```coffee
-$is = require '@eoln/is'
+iz = require '@eoln/is'
+```
 
-$is.Array []
-#=> true
+## `name` - class/type name discovery from instance/value
 
-$is.Object {}
-#=> true
-
-$is.String 'the-string'
-#=> true
-
-$is.RegExp /^i-am-regexp$/g
-#=> true
-
-$is.Date new Date()
-#=> true
-
-$is.Number 3.14
-#=> true
-
-$is.Function (x) => x*x
-#=> true
-
-$is.Boolean 1 == 2
-#=> true
-
-$is.Undefined undefined
-#=> true
-
-$is.Null null
-#=> true
-
-$is.Symbol Symbol()
-#=> true
-
-# global custom classes
+```coffee
 class NewClass
-$is._name new NewClass
-#=> NewClass
+iz.name new NewClass
+#=> 'NewClass'
+```
 
-# register type by example value
-$is._register new NewClass
-$is.NewClass new NewClass
+## `register` - checkers registry
+register custom `NewClass` in `global` scope instance/value
+
+```coffee
+iz.register new NewClass
+iz.NewClass new NewClass
 #=> true
+```
 
-# custom scope `eoln` for custom value of class  `NewestClass`
+register custom `NewestClass` in custom scope `eoln`
+```coffee
 class NewestClass
-$is._register new NewestClass, 'eoln'
-$is.eoln.NewestClass new NewestClass
+iz.register new NewestClass, 'eoln'
+iz.eoln.NewestClass new NewestClass
 #=> true
+```
+
+## checkers
+
+do we have `Array`?
+```coffee
+iz.Array []
+#=> true
+```
+
+do we have `Object`?
+```coffee
+iz.Object {}
+#=> true
+
+iz.Function Object
+#=> true
+```
+
+do we have `String`?
+```coffee
+iz.String 'the-string'
+#=> true
+```
+
+do we have `RegExp`?
+```coffee
+iz.RegExp /^i-am-regexp$/g
+#=> true
+```
+
+do we have `Date`?
+```coffee
+iz.Date new Date()
+#=> true
+```
+
+do we have `Number`?
+```coffee
+iz.Number 3.14
+#=> true
+
+iz.Number 1
+#=> true
+```
+
+do we have `Function`?
+```coffee
+iz.Function (x) => x*x
+#=> true
+```
+
+do we have `Boolean`
+```coffee
+iz.Boolean 1 == 2
+#=> true
+
+iz.Boolean false
+#=> true
+```
+
+do we have `Undefined`?
+```coffee
+iz.Undefined undefined
+#=> true
+```
+
+do we have `Null`?
+```coffee
+iz.Null null
+#=> true
+```
+
+do we have `Symbol`?
+```coffee
+iz.Symbol Symbol()
+#=> true
+```
+## `not` - checker negator
+prefix `not` will negate checker  
+
+we don't have `Function` on `global` scope
+```coffee
+iz.not.Symbol Symbol()
+#=> false
+
+iz.not.Symbol []
+#=> true
+```
+
+negators in custom scope `eoln`
+```coffee
+iz.eoln.not.NewestClass {}
+#=> true
+
+iz.eoln.not.NewestClass new NewestClass
+#=> false
 ```
