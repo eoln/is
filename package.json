@@ -23,13 +23,14 @@
   },
   "homepage": "https://github.com/eoln/is#readme",
   "dependencies": {
-    "coffeescript": "^2.1.1"
+    "coffeescript": "^2.3.1"
   },
   "devDependencies": {
-    "jest": "^22.4.2",
+    "jest": "^22.4.4",
     "jest-preset-coffeescript": "^1.0.0"
   },
   "jest": {
+    "testURL": "http://localhost/",
     "preset": "jest-preset-coffeescript"
   }
 }
