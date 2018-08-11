@@ -1,16 +1,20 @@
 #
-# type name extractor
+# discover type name from instance/value 
 #
-exports._name = ( x ) -> 
+exports.name = ( x ) -> 
     return 'Undefined' if typeof x == 'undefined'
     return 'Null' if x == null
-    x.constructor.name
 
+    # x is function or instance
+    x.constructor.name
 
 #
 # registers type in scope by value or class function
 #
-exports._register = ( x, scope ) ->
+exports.register = ( x, scope ) ->
+
+    # extract type's name
+    nx = @name x
 
     # root pointer by default points at global scope
     root = @
@@ -20,25 +24,33 @@ exports._register = ( x, scope ) ->
 
         # throw when scope conflicts with js native types
         # below in this file the js native types are registered
-        if @[scope]? and 'Function' == this._name @[scope]
-            throw new Error "@eoln/types.register: scope `#{scope}` conflicts"
+        if @[scope]? and 'Function' == typeof @[scope]
+            throw new Error "@eoln/is.register: scope `#{scope}` conflicts"
         
-        # initialize scope
-        @[scope] = {} unless @[scope]?
+        # initialize scope with negation section
+        root[scope] = {not:{}} unless root[scope]?
 
         # update root pointer
-        root = @[scope]
-
-    # extract type's name
-    nx = @_name x
+        root = root[scope]
+   
 
     # finish if name already registered in root pointer 
-    # return @ if root[nx]?
+    #return @ if root[nx]?
 
     # create type checker at root pointer
-    root[nx] = (y) => nx == @_name y 
+    root[nx] = (y) => nx == @name y
+
+    # create negated version
+    root.not[nx] = (y) => nx != @name y
 
     @
+
+
+
+#
+# 'not' enables negation of checkers
+#
+exports.not = {}
 
 
 #
@@ -63,4 +75,4 @@ jsValues = [
 #
 # register js(native) types in global scope
 #
-jsValues.forEach (v) -> exports._register v
+jsValues.forEach (v) -> exports.register v

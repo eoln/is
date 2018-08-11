@@ -1,27 +1,41 @@
-$is = require '../src/is'
+iz = require '../src/is'
 
 describe 'is', () ->
+    # map from value to type
     js = [
-        { v: [],                 t:'Array' }
-        { v: true,               t:'Boolean' }
-        { v: new Date(),         t:'Date' }
-        # Date is a function
-        { v: Date,               t:'Function' }
-        { v: null,               t: 'Null' }
-        { v: 1.0,                t: 'Number' }
-        { v: Promise.resolve(),  t: 'Promise'}
-        { v: {},                 t: 'Object' }
-        { v: /./,                t: 'RegExp' }
-        { v: '',                 t: 'String' }
-        { v: Symbol(),           t: 'Symbol'    }
-        { v: undefined,          t: 'Undefined' }
+        { v: [],                t:'Array' }
+        { v: Array,             t:'Function' }
+        { v: true,              t:'Boolean' }
+        { v: Boolean,           t:'Function' }
+        { v: new Date(),        t:'Date' }
+        { v: Date,              t:'Function' }
+        { v: null,              t: 'Null' }
+        { v: 1.0,               t: 'Number' }
+        { v: 1,                 t: 'Number' }
+        { v: Number,            t: 'Function' }
+        { v: Promise.resolve(), t: 'Promise' }
+        { v: new Promise(->),   t: 'Promise' }
+        { v: Promise,           t: 'Function' }
+        { v: {},                t: 'Object' }
+        { v: new Object,        t: 'Object' }
+        { v: Object,            t: 'Function' }
+        { v: /./,               t: 'RegExp' }
+        { v: new RegExp('.'),   t: 'RegExp' }
+        { v: RegExp,            t: 'Function' }
+        { v: '',                t: 'String' }
+        { v: new String,        t: 'String' }
+        { v: String,            t: 'Function' }
+        { v: Symbol(),          t: 'Symbol' }
+        { v: Symbol,            t: 'Function' }
+        { v: undefined,         t: 'Undefined' }
     ];
+
 
     describe 'layout', () ->
         props = [
             # methods
-            '_name'
-            '_register'
+            'name'
+            'register'
 
             # registered native types
             'Array'
@@ -41,54 +55,91 @@ describe 'is', () ->
         # all props should be defined
         props.forEach (p) ->
             it "property #{p}", () ->
-                expect($is[p]).toBeDefined()
-                expect(typeof $is[p]).toBe('function')
-
-                
+                expect(typeof iz[p]).toBe('function')
 
 
 
-    describe '_name', () ->
+        it 'property not', () ->
+            expect(typeof iz.not).toBe('object')
+
+
+
+    describe 'native checkers', () ->
+        js.forEach (d)->
+            it "-> #{d.t}", () ->
+                expect(iz[d.t] d.v).toBeTruthy();
+
+
+
+    describe 'native checkers negators', () ->
+        js.forEach (d)->
+            js.forEach (e)->
+                if d.t != e.t
+                    it "-> #{d.t} on #{e.t}", () ->
+                        expect(iz.not[d.t] e.v).toBeTruthy();
+
+
+
+    describe 'name', () ->
+
+
 
         it 'should be a Function', () ->
-            expect( typeof $is._name ).toBe 'function'
+            expect( typeof iz.name ).toBe 'function'
+
+
 
         describe 'should recognize native js types', () ->
             js.forEach (d)->
                 it "-> #{d.t}", () ->
-                    expect($is._name d.v).toEqual d.t
+                    expect(iz.name d.v).toEqual d.t
 
-        it 'should recognize the type of custom class', () ->
+
+
+        it 'should recognize the name of custom class by instance', () ->
             class NewClass
-            expect($is._name new NewClass).toEqual 'NewClass'
+            expect(iz.name new NewClass).toEqual 'NewClass'
 
 
 
-    describe '_register', () ->
+    describe 'register', () ->
 
         it 'should be a Function', () ->
-            expect( typeof $is._register ).toBe 'function'
+            expect( typeof iz.register ).toBe 'function'
 
-        describe 'register native js types', () ->
+        describe 'register native js types in global and intrenal scope', () ->
             js.forEach (d)->
                 it "-> #{d.t}", () ->
-                    delete $is[d.t]
-                    expect($is[d.t]).toBeFalsy()
-                    rv = $is._register d.v
-                    expect(rv).toEqual $is
-                    expect(typeof $is[d.t]).toBe 'function'
-                    rv = $is._register d.v, 'internal'
-                    expect(rv).toEqual $is
-                    expect($is.internal).toBeDefined()
-                    expect(typeof $is.internal[d.t]).toBe 'function'
+                    # ensure there is no entry
+                    delete iz[d.t]
+                    expect(iz[d.t]).toBeFalsy()
+                    delete iz.not[d.t]
+                    expect(iz.not[d.t]).toBeFalsy()
+
+                    # do registration
+                    rv = iz.register d.v
+                    expect(rv).toEqual iz
+                    expect(typeof iz[d.t]).toBe 'function'
+                    
+                    # check corresponding negator
+                    expect(typeof iz.not[d.t]).toBe 'function'
+
+                    # check registration in internal scope
+                    rv = iz.register d.v, 'internal'
+                    expect(rv).toEqual iz
+                    expect(iz.internal).toBeDefined()
+                    expect(iz.internal.not).toBeDefined()
+                    expect(typeof iz.internal[d.t]).toBe 'function'
+                    expect(typeof iz.internal.not[d.t]).toBe 'function'
 
 
         it 'should throws error on scope conflicts', () ->
-            expect( -> $is._register 1, 'Undefined' ).toThrow()
+            expect( -> iz.register 1, 'Undefined' ).toThrow()
             undefined
 
         it 'should be able to register custom class', () ->
             class Class2
-            $is._register new Class2
-            expect(typeof $is.Class2).toBe 'function'
+            iz.register new Class2
+            expect(typeof iz.Class2).toBe 'function'
 
+        
