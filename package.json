@@ -26,7 +26,7 @@
     "coffeescript": "^2.3.1"
   },
   "devDependencies": {
-    "jest": "^22.4.4",
+    "jest": "^29.3.1",
     "jest-preset-coffeescript": "^1.0.0"
   },
   "jest": {
